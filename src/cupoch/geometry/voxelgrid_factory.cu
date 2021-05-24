@@ -64,7 +64,7 @@ struct create_from_pointcloud_functor {
             const Eigen::Vector3f &point, const Eigen::Vector3f &color) const {
         Eigen::Vector3f ref_coord = (point - min_bound_) / voxel_size_;
         Eigen::Vector3i voxel_index =
-                Eigen::device_vectorize<float, 3, ::floor>(ref_coord)
+                Eigen::device_vectorize<float, 3, floorf>(ref_coord)
                         .cast<int>();
         return thrust::make_tuple(
                 voxel_index, (has_colors_) ? geometry::Voxel(voxel_index, color)
@@ -136,9 +136,9 @@ std::shared_ptr<VoxelGrid> VoxelGrid::CreateDense(const Eigen::Vector3f &origin,
     // FIXME: Removing `floor' will most probably change the result of
     // calculations; however, doing so will not have a huge effect on the
     // final result.
-    int num_w = static_cast<int>(width / voxel_size);
-    int num_h = static_cast<int>(height / voxel_size);
-    int num_d = static_cast<int>(depth / voxel_size);
+    int num_w = static_cast<int>(floorf(width / voxel_size));
+    int num_h = static_cast<int>(floorf(height / voxel_size));
+    int num_d = static_cast<int>(floorf(depth / voxel_size));
     output->origin_ = origin;
     output->voxel_size_ = voxel_size;
     int n_total = num_w * num_h * num_d;
