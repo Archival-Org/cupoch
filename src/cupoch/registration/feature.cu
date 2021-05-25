@@ -88,15 +88,15 @@ struct compute_spfh_functor {
             // skip the point itself, compute histogram
             auto pf = ComputePairFeatures(points_[idx], normals_[idx],
                                           points_[idx_knn], normals_[idx_knn]);
-            int h_index = (int)(floor(11 * (pf(0) + M_PI) / (2.0 * M_PI)));
+            int h_index = (int)(floorf(11 * (pf(0) + M_PI) / (2.0 * M_PI)));
             if (h_index < 0) h_index = 0;
             if (h_index >= 11) h_index = 10;
             ft[h_index] += hist_incr;
-            h_index = (int)(floor(11 * (pf(1) + 1.0) * 0.5));
+            h_index = (int)(floorf(11 * (pf(1) + 1.0) * 0.5));
             if (h_index < 0) h_index = 0;
             if (h_index >= 11) h_index = 10;
             ft[h_index + 11] += hist_incr;
-            h_index = (int)(floor(11 * (pf(2) + 1.0) * 0.5));
+            h_index = (int)(floorf(11 * (pf(2) + 1.0) * 0.5));
             if (h_index < 0) h_index = 0;
             if (h_index >= 11) h_index = 10;
             ft[h_index + 22] += hist_incr;

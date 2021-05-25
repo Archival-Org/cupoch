@@ -71,7 +71,7 @@ struct compute_key_functor {
     const float voxel_size_;
     __device__ Eigen::Vector3i operator()(const Eigen::Vector3f &pt) {
         auto ref_coord = (pt - voxel_min_bound_) / voxel_size_;
-        return Eigen::device_vectorize<float, 3, ::floor>(ref_coord)
+        return Eigen::device_vectorize<float, 3, floorf>(ref_coord)
                 .cast<int>();
     }
 };

@@ -247,7 +247,7 @@ struct compute_obstacle_cells_functor {
     const Eigen::Vector3f origin2_;
     __device__ Eigen::Vector3i operator()(const Eigen::Vector3i& key) const {
         Eigen::Vector3f abs_pos = key.cast<float>() * voxel_size_ + origin1_;
-        return Eigen::device_vectorize<float, 3, ::floor>((abs_pos - origin2_) /
+        return Eigen::device_vectorize<float, 3, floorf>((abs_pos - origin2_) /
                                                           voxel_size_)
                        .cast<int>() +
                Eigen::Vector3i::Constant(resolution_ / 2);
@@ -392,7 +392,7 @@ float DistanceTransform::GetDistance(const Eigen::Vector3f& query) const {
 utility::device_vector<float> DistanceTransform::GetDistances(const utility::device_vector<Eigen::Vector3f>& queries) const {
     auto func = [voxel_size = voxel_size_, resolution = resolution_, origin = origin_] __device__ (const Eigen::Vector3f& query) {
         Eigen::Vector3f qv = (query - origin + 0.5 * voxel_size * Eigen::Vector3f::Constant(resolution)) / voxel_size;
-        Eigen::Vector3i idx = Eigen::device_vectorize<float, 3, ::floor>(qv.array()).cast<int>();
+        Eigen::Vector3i idx = Eigen::device_vectorize<float, 3, floorf>(qv.array()).cast<int>();
         return IndexOf(idx, resolution);
     };
     utility::device_vector<float> dists(queries.size());

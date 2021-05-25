@@ -19,6 +19,7 @@
  * IN THE SOFTWARE.
 **/
 #include <thrust/iterator/discard_iterator.h>
+#include <cuda_runtime_api.h>
 
 #include "cupoch/geometry/boundingvolume.h"
 #include "cupoch/geometry/densegrid.inl"
@@ -91,7 +92,7 @@ struct compute_intersect_voxel_segment_functor {
         int sidx = svidx / 7;
         int vidx = svidx % 7;
         Eigen::Vector3f center = sidx * steps_[pidx] + viewpoint_;
-        Eigen::Vector3f voxel_idx = Eigen::device_vectorize<float, 3, ::floor>(
+        Eigen::Vector3f voxel_idx = Eigen::device_vectorize<float, 3, floorf>(
                 (center - origin_) / voxel_size_);
         Eigen::Vector3f voxel_center =
                 voxel_size_ *
@@ -158,7 +159,7 @@ struct create_occupancy_voxels_functor {
         bool hit_flag = thrust::get<1>(x);
         Eigen::Vector3f ref_coord = (point - origin_) / voxel_size_;
         return (hit_flag)
-                       ? Eigen::device_vectorize<float, 3, ::floor>(ref_coord)
+                       ? Eigen::device_vectorize<float, 3, floorf>(ref_coord)
                                          .cast<int>() +
                                  half_resolution_
                        : Eigen::Vector3i(INVALID_VOXEL_INDEX,

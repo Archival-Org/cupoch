@@ -392,8 +392,8 @@ std::shared_ptr<Image> Image::Downsample() const {
         utility::LogError("[Downsample] Unsupported image format.");
         return output;
     }
-    int half_width = (int)floor((float)width_ / 2.0);
-    int half_height = (int)floor((float)height_ / 2.0);
+    int half_width = static_cast<int>(floor((float)width_ / 2.0));
+    int half_height = static_cast<int>(floor((float)height_ / 2.0));
     output->Prepare(half_width, half_height, 1, 4);
 
     downsample_functor func(thrust::raw_pointer_cast(data_.data()), width_,
@@ -417,7 +417,7 @@ std::shared_ptr<Image> Image::FilterHorizontal(
     }
     output->Prepare(width_, height_, 1, 4);
 
-    const int half_kernel_size = (int)(floor((float)kernel.size() / 2.0));
+    const int half_kernel_size = static_cast<int>(floorf(kernel.size() / 2.0f));
 
     filter_horizontal_functor func(
             thrust::raw_pointer_cast(data_.data()), width_,
